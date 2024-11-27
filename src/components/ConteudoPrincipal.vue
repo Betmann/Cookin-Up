@@ -9,21 +9,21 @@ type Pagina = 'SelecionarIngredientes' | 'MostrarReceitas';
 export default {
   data() {
     return {
-        ingredientes: [] as string[],
-        conteudo: 'SelecionarIngredientes' as Pagina
+      ingredientes: [] as string[],
+      conteudo: 'SelecionarIngredientes' as Pagina
     }
   },
-  components: { SelecionarIngredientes, SuaLista , Tag, MostarReceitas},
+  components: { SelecionarIngredientes, SuaLista, Tag, MostarReceitas },
   methods: {
     adicionarIngrediente(ingrediente: string) {
-       
+
       this.ingredientes.push(ingrediente)
 
     },
     removerIngrediente(ingrediente: string) {
       this.ingredientes = this.ingredientes.filter(iLista => ingrediente !== iLista);
     },
-    navegar(pagina: Pagina){
+    navegar(pagina: Pagina) {
       this.conteudo = pagina
     }
   },
@@ -32,13 +32,16 @@ export default {
 </script>
 
 <template>
-   <main class="conteudo-principal">
+  <main class="conteudo-principal">
     <SuaLista :ingredientes="ingredientes" />
 
-    <SelecionarIngredientes v-if="conteudo === 'SelecionarIngredientes'" @adicionar-ingrediente="adicionarIngrediente" @remover-ingrediente="removerIngrediente"  @buscar-receitas="navegar('MostrarReceitas')"/>
+    <KeepAlive  include="SelecionarIngredientes">
+      <SelecionarIngredientes v-if="conteudo === 'SelecionarIngredientes'" @adicionar-ingrediente="adicionarIngrediente"
+        @remover-ingrediente="removerIngrediente" @buscar-receitas="navegar('MostrarReceitas')" />
 
-    <MostarReceitas v-else-if="conteudo == 'MostrarReceitas'" @editar-receitas="navegar('SelecionarIngredientes')"/>
-   </main>
+      <MostarReceitas v-else-if="conteudo == 'MostrarReceitas'" :ingredientes="ingredientes" @editar-receitas="navegar('SelecionarIngredientes')" />
+    </KeepAlive>
+  </main>
 </template>
 
 <style scoped>
@@ -94,5 +97,4 @@ export default {
     gap: 4rem;
   }
 }
-
 </style>
